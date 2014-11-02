@@ -1,7 +1,7 @@
 
 Trial 1 score: 0
 Trial 1 StateSeq: 
-Trial 1 path: 
+Trial 1 path: (3,2),(3,3),(2,3),(1,3),(1,2)
 
 Number of trials: 1
 Total Score: 0
