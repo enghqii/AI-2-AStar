@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Stack;
 
@@ -166,12 +166,13 @@ public class AStar {
 					nextY--;
 					break;
 				default:
-					System.out.println("end?");
+					System.out.println("end");
 					break;
 				}
 			}
 		}
 		
+		Collections.reverse(path);
 		return path;
 	}
 
