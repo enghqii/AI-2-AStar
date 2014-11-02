@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -5,7 +6,7 @@ import java.util.Queue;
 
 public class AStar {
 	
-	class AStarNode implements Comparable<AStarNode>{
+	private class AStarNode implements Comparable<AStarNode>{
 		
 		// position
 		public int x;
@@ -33,6 +34,9 @@ public class AStar {
 		}
 	}
 
+	
+	private int mapSize; // boundary (0 - mapSize-1)
+	
 	private int beginX, beginY;
 	private int endX, endY;
 
@@ -40,17 +44,23 @@ public class AStar {
 	private PriorityQueue<AStarNode> 	openList = new PriorityQueue<AStar.AStarNode>();
 	// explored set
 	private Queue<AStarNode> 			closeList = new LinkedList<AStar.AStarNode>();
-	
+
 	private AStarHeuristicStrategy 		strategy;
-
-	public AStar(int beginX, int beginY, int endX, int endY, int heuristic) {
-
-		this.beginX = beginX;
-		this.beginY = beginY;
-
-		this.endX = endX;
-		this.endY = endY;
+	
+	private Environment environment;
+	
+	public AStar(Environment environment, int heuristic){
 		
+		this.mapSize = environment.getWorldSize();
+		
+		int[] agentLocation = environment.getAgentLocation();
+		this.beginX = agentLocation[0];
+		this.beginY = agentLocation[1];
+
+		int[] goldLocation = environment.getGoldLocation();
+		this.endX = goldLocation[0];
+		this.endY = goldLocation[1];
+
 		switch (heuristic) {
 		case 1:
 			strategy = new ManhattanStrategy();
@@ -58,24 +68,63 @@ public class AStar {
 		case 2:
 			strategy = new EuclidStrategy();
 			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
 		default:
 			strategy = null;
 			break;
 		}
+		
+		this.environment = environment;
 	}
-	
+
 	public void PathFind(){
 		
+		openList.clear();
+		closeList.clear();
+
+		System.out.println("Begins at " + beginX + ", " + beginY);
+		System.out.println("Ends at " + endX + ", " + endY);
+		
+		int h = strategy.Heuristic(beginX, beginY, endX, endY);
+		AStarNode initial = new AStarNode(beginX, beginY, 0, h);
+		openList.add(initial);
+		
+		while(openList.isEmpty() == false){
+			
+			AStarNode node = openList.poll();
+			closeList.add(node);
+			
+			System.out.println("Now Inspecting " + node.x + "," + node.y);
+			
+			if(node.x == this.endX && node.y == this.endY){
+				break;
+			}
+
+			// expand only 'explorable' node	
+			if( node.x-1 > 0 && environment.isAvailableLocation(node.x-1, node.y)){
+				h = strategy.Heuristic(node.x - 1, node.y, endX, endY);
+				openList.add(new AStarNode(node.x - 1, node.y, node.g + 1, h));
+			}
+			if( node.x+1 < mapSize && environment.isAvailableLocation(node.x+1, node.y)){
+				h = strategy.Heuristic(node.x+1, node.y, endX, endY);
+				openList.add(new AStarNode(node.x+1, node.y, node.g + 1, h));
+			}
+			if( node.y-1 > 0 && environment.isAvailableLocation(node.x, node.y-1)){
+				h = strategy.Heuristic(node.x, node.y-1, endX, endY);
+				openList.add(new AStarNode(node.x, node.y-1, node.g + 1, h));
+			}
+			if( node.y+1 < mapSize && environment.isAvailableLocation(node.x, node.y+1)){
+				h = strategy.Heuristic(node.x, node.y+1, endX, endY);
+				openList.add(new AStarNode(node.x, node.y+1, node.g + 1, h));
+			}
+		}
+		
+		for(AStarNode node : closeList){
+			System.out.println("" + node.x + ", " + node.y);
+		}
 	}
 	
-	public void getPath(){
-		
+	public ArrayList<Integer[]> getPath(){
+		return new ArrayList<Integer[]>();
 	}
 
 }

@@ -48,10 +48,15 @@ class Simulation {
 		
 		environment.placeAgent(agent);
 		environment.printEnvironment();
+				
+		AStar astar = new AStar(environment, heuristic);
+		astar.PathFind();
+		this.path = astar.getPath();
 
 		// just find the path, and seq.
 		// getScore will do.
-
+		
+		/*
 		StateSeq.add(Action.START_TRIAL);
 		
 		StateSeq.add(Action.GO_FORWARD);
@@ -67,10 +72,12 @@ class Simulation {
 		StateSeq.add(Action.GRAB);
 		
 		StateSeq.add(Action.END_TRIAL);
+		*/
 	}
 
 	public String getStateSeq() {
 
+		if(StateSeq.isEmpty() == false){
 			String seq = Action.printAction(StateSeq.get(0)) + ",";
 
 			for (int i = 1; i < StateSeq.size() - 1; i++) {
@@ -80,6 +87,9 @@ class Simulation {
 			seq += Action.printAction(StateSeq.get(StateSeq.size() - 1));
 
 			return seq;
+		}else{
+			return "";
+		}
 	}
 
 	public String getpath() {

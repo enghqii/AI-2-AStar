@@ -1,0 +1,8 @@
+
+Trial 1 score: 0
+Trial 1 StateSeq: 
+Trial 1 path: 
+
+Number of trials: 1
+Total Score: 0
+Average Score: 0.0

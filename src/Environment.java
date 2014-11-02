@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /*
  * Class that defines the environment.
  * 
@@ -106,6 +108,64 @@ class Environment {
 		}
 		
 		return agentPos;		
+	}
+	
+	public int[] getGoldLocation(){
+		
+		int[] goldPos = new int[2];
+		
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
+				if (wumpusWorld[i][j][2] != ' ') {
+					goldPos[0] = i;
+					goldPos[1] = j;
+				}
+			}
+		}
+		
+		return goldPos;
+	}
+	
+	public Integer[] getWumpusLocation(){
+		
+		Integer[] wumpusPos = new Integer[2];
+		
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
+				if (wumpusWorld[i][j][1] != ' ') {
+					wumpusPos[0] = i;
+					wumpusPos[1] = j;
+				}
+			}
+		}
+		
+		return wumpusPos;
+	}
+		
+	public ArrayList<Integer[]> getPitLocations(){
+		
+		ArrayList<Integer[]> locations = new ArrayList<Integer[]>();
+		
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
+				if (wumpusWorld[i][j][0] != ' ') {
+					Integer[] pitPos = new Integer[2];
+					pitPos[0] = i;
+					pitPos[1] = j;
+					
+					locations.add(pitPos);
+				}
+			}
+		}
+		
+		return locations;
+	}
+	
+	public boolean isAvailableLocation(int x, int y){
+		if(wumpusWorld[x][y][0] != ' '){
+			return false;
+		}
+		return true;
 	}
 	
 	public void placeAgent(Agent theAgent) {
