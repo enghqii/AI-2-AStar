@@ -64,7 +64,7 @@ public class AStar {
 		this.endX = goldLocation[0];
 		this.endY = goldLocation[1];
 
-		heuristic = 2;
+		heuristic = 3;
 
 		switch (heuristic) {
 		case 1:
@@ -72,6 +72,9 @@ public class AStar {
 			break;
 		case 2:
 			strategy = new EuclidStrategy();
+			break;
+		case 3:
+			strategy = new ChebyshevStrategy();
 			break;
 		default:
 			strategy = null;
@@ -98,7 +101,7 @@ public class AStar {
 			AStarNode node = openList.poll();
 			closeList.push(node);
 
-			//System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
+			System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
 
 			if (node.x == this.endX && node.y == this.endY) {
 				break; // destination
@@ -108,7 +111,11 @@ public class AStar {
 			this.pushOpenList(node.x + 1, node.y, node.g + 1, 'S', node.direction);
 			this.pushOpenList(node.x, node.y - 1, node.g + 1, 'W', node.direction);
 			this.pushOpenList(node.x, node.y + 1, node.g + 1, 'E', node.direction);
+			
+			System.out.println("closeList size " + closeList.size() + " openList size " + openList.size());
 		}
+
+		System.out.println("closeList size " + closeList.size() + " openList size " + openList.size());
 		
 		this.postFindPath();
 		this.postFindStateSeq();

@@ -17,3 +17,15 @@ class EuclidStrategy implements AStarHeuristicStrategy{
 	}
 	
 }
+
+class ChebyshevStrategy implements AStarHeuristicStrategy{
+	
+	public int Heuristic(int posX, int posY, int endX, int endY) {
+	
+		float dx = Math.abs(posX - endX);
+		float dy = Math.abs(posY - endY);
+		
+		//return (int) Math.max(dx, dy);
+		 return (int) ((dx + dy) + (Math.sqrt(2) - 2 ) * Math.min(dx, dy));
+	}
+}

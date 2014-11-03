@@ -261,8 +261,7 @@ class Simulation {
 
 				lastAction = Action.NO_OP;
 			}
-			
-			environment.printEnvironment();
+			//environment.printEnvironment();
 
 		} catch (Exception e) {
 
