@@ -26,23 +26,41 @@ class ChebyshevStrategy implements AStarHeuristicStrategy{
 		float dx = Math.abs(posX - endX);
 		float dy = Math.abs(posY - endY);
 		
-		//return (int) Math.max(dx, dy);
-		 return (int) ((dx + dy) + (Math.sqrt(2) - 2 ) * Math.min(dx, dy));
+		return (int) (Math.max(dx, dy));
 	}
 }
 
-class WeightedStrategy implements AStarHeuristicStrategy{
+class WeightedManhattanStrategy implements AStarHeuristicStrategy{
 	
 	private float weight = 1;
 	
-	public WeightedStrategy(){}
+	public WeightedManhattanStrategy(){}
 	
-	public WeightedStrategy(float weight){
+	public WeightedManhattanStrategy(float weight){
 		this.weight = weight;
 	}
 
 	public int Heuristic(int posX, int posY, int endX, int endY) {
 		return (int) (weight * (Math.abs(posX - endX) + Math.abs(posY - endY)));
+	}
+	
+}
+
+class WeightedEuclidStrategy implements AStarHeuristicStrategy{
+	
+	private float weight = 1;
+	
+	public WeightedEuclidStrategy(){}
+	
+	public WeightedEuclidStrategy(float weight){
+		this.weight = weight;
+	}
+
+	public int Heuristic(int posX, int posY, int endX, int endY) {
+		float dx = Math.abs(posX - endX);
+		float dy = Math.abs(posY - endY);
+		
+		return (int) (weight *(Math.sqrt(Math.pow(posX - endX, 2) + Math.pow(posY - endY, 2))));
 	}
 	
 }

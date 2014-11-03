@@ -66,16 +66,19 @@ public class AStar {
 		
 		switch (heuristic) {
 		case 1:
-			strategy = new ManhattanStrategy();
+			strategy = new ChebyshevStrategy();
 			break;
 		case 2:
 			strategy = new EuclidStrategy();
 			break;
 		case 3:
-			strategy = new ChebyshevStrategy();
+			strategy = new ManhattanStrategy();
 			break;
 		case 4:
-			strategy = new WeightedStrategy(environment.getWorldSize()/6.0f);
+			strategy = new WeightedEuclidStrategy(2.0f);
+			break;
+		case 5:
+			strategy = new WeightedManhattanStrategy(2.5f);
 			break;
 		default:
 			strategy = null;
@@ -96,9 +99,12 @@ public class AStar {
 		int h = strategy.Heuristic(beginX, beginY, endX, endY);
 		AStarNode initial = new AStarNode(beginX, beginY, 0, h, ' ');
 		openList.add(initial);
+		
+		int i = 0;
 
 		while (openList.isEmpty() == false) {
-
+			i++;
+			
 			AStarNode node = openList.poll();
 			closeList.push(node);
 
@@ -112,14 +118,15 @@ public class AStar {
 			this.pushOpenList(node.x + 1, node.y, node.g + 1, 'S', node.direction);
 			this.pushOpenList(node.x, node.y - 1, node.g + 1, 'W', node.direction);
 			this.pushOpenList(node.x, node.y + 1, node.g + 1, 'E', node.direction);
-			
-			System.out.println("closeList size " + closeList.size() + " openList size " + openList.size());
 		}
 
 		System.out.println("closeList size " + closeList.size() + " openList size " + openList.size());
 		
 		this.postFindPath();
 		this.postFindStateSeq();
+		
+		System.out.println("loop cnt " + i);
+		System.out.println("ACTIONS " + this.StateSeq.size());
 	}
 
 	private void pushOpenList(int x, int y, int g, char direction, char lastDirection) {
