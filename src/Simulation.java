@@ -47,7 +47,7 @@ class Simulation {
 		agent = new Agent(environment, transferPercept, nonDeterministic);
 		
 		environment.placeAgent(agent);
-		environment.printEnvironment();
+		//environment.printEnvironment();
 				
 		AStar astar = new AStar(environment, heuristic);
 		astar.PathFind();

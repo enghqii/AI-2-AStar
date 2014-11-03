@@ -161,11 +161,12 @@ class Environment {
 		return locations;
 	}
 	
-	public boolean isAvailableLocation(int x, int y){
-		if(wumpusWorld[x][y][0] != ' '){
-			return false;
+	public boolean isAvailableLocation(int x, int y) {
+
+		if ((0 <= x && x < worldSize) && (0 <= y && y < worldSize) && (wumpusWorld[x][y][0] == ' ')) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	public void placeAgent(Agent theAgent) {
