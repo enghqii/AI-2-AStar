@@ -64,7 +64,7 @@ public class AStar {
 		this.endX = goldLocation[0];
 		this.endY = goldLocation[1];
 
-		heuristic = 1;
+		heuristic = 2;
 
 		switch (heuristic) {
 		case 1:
@@ -104,17 +104,17 @@ public class AStar {
 				break; // destination
 			}
 			
-			this.pushOpenList(node.x - 1, node.y, node.g + 1, 'N');
-			this.pushOpenList(node.x + 1, node.y, node.g + 1, 'S');
-			this.pushOpenList(node.x, node.y - 1, node.g + 1, 'W');
-			this.pushOpenList(node.x, node.y + 1, node.g + 1, 'E');
+			this.pushOpenList(node.x - 1, node.y, node.g + 1, 'N', node.direction);
+			this.pushOpenList(node.x + 1, node.y, node.g + 1, 'S', node.direction);
+			this.pushOpenList(node.x, node.y - 1, node.g + 1, 'W', node.direction);
+			this.pushOpenList(node.x, node.y + 1, node.g + 1, 'E', node.direction);
 		}
 		
 		this.postFindPath();
 		this.postFindStateSeq();
 	}
 
-	private void pushOpenList(int x, int y, int g, char direction) {
+	private void pushOpenList(int x, int y, int g, char direction, char lastDirection) {
 
 		for (AStarNode node : closeList) {
 			if (node.x == x && node.y == y) {
@@ -124,7 +124,22 @@ public class AStar {
 		}
 
 		if (environment.isAvailableLocation(x, y)) {
-
+			
+			int diff = CharDirToInt(lastDirection) - CharDirToInt(direction);
+			
+			// discriminative weights
+			if (diff == 1 || diff == -3 || diff == -1 || diff == 3) {
+				g += 1;
+			} else if (diff == 2 || diff == -2) {
+				g += 2;
+			} 
+			
+			// wumpus shooting cost
+			Integer[] wumpusLocation = environment.getWumpusLocation();
+			if(x == wumpusLocation[0] && y == wumpusLocation[1]){
+				g += 2; // shoot cost
+			}
+			
 			int h = strategy.Heuristic(x, y, endX, endY);
 			AStarNode expanded = new AStarNode(x, y, g, h, direction);
 			openList.add(expanded);
@@ -196,39 +211,32 @@ public class AStar {
 
 				if (dirX == 1 && dirY == 0) {
 					nodeDir = NORTH;
-					System.out.println("N");
 				} else if (dirX == -1 && dirY == 0) {
 					nodeDir = SOUTH;
-					System.out.println("S");
 				} else if (dirX == 0 && dirY == -1) {
 					nodeDir = WEST;
-					System.out.println("W");
 				} else if (dirX == 0 && dirY == 1) {
 					nodeDir = EAST;
-					System.out.println("E");
 				}
 			}
 
 			int diff = agentDir - nodeDir;
-			System.out.println("agentDir [" + agentDir + "] nodeDir [" + nodeDir + "] diff [" + diff + "]");
+			//System.out.println("agentDir [" + agentDir + "] nodeDir [" + nodeDir + "] diff [" + diff + "]");
 
 			/* Agent Turn */{
 
 				if (diff == 1 || diff == -3) {
 					// left
 					StateSeq.add(Action.TURN_LEFT);
-					System.out.println("turn left");
 					
 				} else if (diff == -1 || diff == 3) {
 					// right
 					StateSeq.add(Action.TURN_RIGHT);
-					System.out.println("turn right");
 					
 				} else if (diff == 2 || diff == -2) {
 					// left * 2
 					StateSeq.add(Action.TURN_LEFT);
 					StateSeq.add(Action.TURN_LEFT);
-					System.out.println("turn left * 2");
 				}
 			}
 			

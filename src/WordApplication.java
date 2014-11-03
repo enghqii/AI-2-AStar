@@ -53,6 +53,7 @@ class WorldApplication {
 			for (int currTrial = 0; currTrial < wa.numTrials; currTrial++) {
 
 				char[][][] wumpusWorld = readWumpusWorld(wa.worldSize, wa.gameboard);
+				//char[][][] wumpusWorld = generateRandomWumpusWorld((int) System.currentTimeMillis(), wa.worldSize, true);
 				Environment wumpusEnvironment = new Environment(wa.worldSize, wumpusWorld);
 
 				Simulation trial = new Simulation(wumpusEnvironment,
@@ -130,6 +131,111 @@ class WorldApplication {
 		}
 
 		return n;
+	}
+
+	public static char[][][] generateRandomWumpusWorld(int seed, int size,
+			boolean randomlyPlaceAgent) {
+
+		char[][][] newWorld = new char[size][size][4];
+		boolean[][] occupied = new boolean[size][size];
+
+		int x, y;
+
+		Random randGen = new Random(seed);
+
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				for (int k = 0; k < 4; k++) {
+					newWorld[i][j][k] = ' ';
+				}
+			}
+		}
+
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				occupied[i][j] = false;
+			}
+		}
+
+		int pits = size;
+
+		// default agent location
+		// and orientation
+		int agentXLoc = 0;
+		int agentYLoc = 0;
+		char agentIcon = '>';
+
+		// randomly generate agent
+		// location and orientation
+		if (randomlyPlaceAgent == true) {
+
+			agentXLoc = randGen.nextInt(size);
+			agentYLoc = randGen.nextInt(size);
+
+			switch (randGen.nextInt(4)) {
+
+			case 0:
+				agentIcon = 'A';
+				break;
+			case 1:
+				agentIcon = '>';
+				break;
+			case 2:
+				agentIcon = 'V';
+				break;
+			case 3:
+				agentIcon = '<';
+				break;
+			}
+		}
+
+		// place agent in the world
+		newWorld[agentXLoc][agentYLoc][3] = agentIcon;
+
+		// Pit generation
+		for (int i = 0; i < pits; i++) {
+
+			x = randGen.nextInt(size);
+			y = randGen.nextInt(size);
+
+			while ((x == agentXLoc && y == agentYLoc) | occupied[x][y] == true) {
+				x = randGen.nextInt(size);
+				y = randGen.nextInt(size);
+			}
+
+			occupied[x][y] = true;
+
+			newWorld[x][y][0] = 'P';
+
+		}
+
+		// Wumpus Generation
+		x = randGen.nextInt(size);
+		y = randGen.nextInt(size);
+
+		while (x == agentXLoc && y == agentYLoc) {
+			x = randGen.nextInt(size);
+			y = randGen.nextInt(size);
+		}
+
+		occupied[x][y] = true;
+
+		newWorld[x][y][1] = 'W';
+
+		// Gold Generation
+		x = randGen.nextInt(size);
+		y = randGen.nextInt(size);
+
+		// while (x == 0 && y == 0) {
+		// x = randGen.nextInt(size);
+		// y = randGen.nextInt(size);
+		// }
+
+		occupied[x][y] = true;
+
+		newWorld[x][y][2] = 'G';
+
+		return newWorld;
 	}
 
 	public static char[][][] readWumpusWorld(int size, String gameboard)
