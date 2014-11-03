@@ -63,7 +63,8 @@ class WorldApplication {
 				trialScores[currTrial] 		= trial.getScore();
 				trialStateSeqs[currTrial] 	= trial.getStateSeq();
 				path[currTrial] 			= trial.getpath();
-
+				
+				//wumpusEnvironment.printEnvironment();
 			}
 
 			for (int i = 0; i < wa.numTrials; i++) {

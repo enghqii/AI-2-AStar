@@ -63,9 +63,7 @@ public class AStar {
 		int[] goldLocation = environment.getGoldLocation();
 		this.endX = goldLocation[0];
 		this.endY = goldLocation[1];
-
-		heuristic = 3;
-
+		
 		switch (heuristic) {
 		case 1:
 			strategy = new ManhattanStrategy();
@@ -75,6 +73,9 @@ public class AStar {
 			break;
 		case 3:
 			strategy = new ChebyshevStrategy();
+			break;
+		case 4:
+			strategy = new WeightedStrategy(environment.getWorldSize()/6.0f);
 			break;
 		default:
 			strategy = null;

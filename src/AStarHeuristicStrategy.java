@@ -3,6 +3,7 @@ public interface AStarHeuristicStrategy {
 	public int Heuristic(int posX, int posY, int endX, int endY);
 }
 
+
 class ManhattanStrategy implements AStarHeuristicStrategy{
 
 	public int Heuristic(int posX, int posY, int endX, int endY) {
@@ -28,4 +29,20 @@ class ChebyshevStrategy implements AStarHeuristicStrategy{
 		//return (int) Math.max(dx, dy);
 		 return (int) ((dx + dy) + (Math.sqrt(2) - 2 ) * Math.min(dx, dy));
 	}
+}
+
+class WeightedStrategy implements AStarHeuristicStrategy{
+	
+	private float weight = 1;
+	
+	public WeightedStrategy(){}
+	
+	public WeightedStrategy(float weight){
+		this.weight = weight;
+	}
+
+	public int Heuristic(int posX, int posY, int endX, int endY) {
+		return (int) (weight * (Math.abs(posX - endX) + Math.abs(posY - endY)));
+	}
+	
 }

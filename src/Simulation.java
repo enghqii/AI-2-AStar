@@ -55,7 +55,6 @@ class Simulation {
 		astar.PathFind();
 		this.path = astar.getPath();
 		this.StateSeq = astar.getStateSeq();
-
 	}
 
 	public String getStateSeq() {
@@ -261,6 +260,7 @@ class Simulation {
 
 				lastAction = Action.NO_OP;
 			}
+			
 			//environment.printEnvironment();
 
 		} catch (Exception e) {
