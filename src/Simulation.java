@@ -47,32 +47,15 @@ class Simulation {
 		agent = new Agent(environment, transferPercept, nonDeterministic);
 		
 		environment.placeAgent(agent);
-		//environment.printEnvironment();
-				
-		AStar astar = new AStar(environment, heuristic);
-		astar.PathFind();
-		this.path = astar.getPath();
 
 		// just find the path, and seq.
 		// getScore will do.
-		
-		/*
-		StateSeq.add(Action.START_TRIAL);
-		
-		StateSeq.add(Action.GO_FORWARD);
-		StateSeq.add(Action.TURN_LEFT);
 
-		StateSeq.add(Action.GO_FORWARD);
-		StateSeq.add(Action.GO_FORWARD);
+		AStar astar = new AStar(environment, heuristic);
+		astar.PathFind();
+		this.path = astar.getPath();
+		this.StateSeq = astar.getStateSeq();
 
-		StateSeq.add(Action.GO_FORWARD);
-		StateSeq.add(Action.TURN_LEFT);
-
-		StateSeq.add(Action.GO_FORWARD);
-		StateSeq.add(Action.GRAB);
-		
-		StateSeq.add(Action.END_TRIAL);
-		*/
 	}
 
 	public String getStateSeq() {
