@@ -43,8 +43,6 @@ public class AStar {
 	private int 						beginX, beginY;
 	private int 						endX, endY;
 	
-	private char 						direction; 											// initial agent direction
-
 	private PriorityQueue<AStarNode> 	openList 	= new PriorityQueue<AStar.AStarNode>(); // frontier
 	private Stack<AStarNode> 			closeList 	= new Stack<AStar.AStarNode>(); 		// explored set
 
@@ -61,8 +59,6 @@ public class AStar {
 		int[] agentLocation = environment.getAgentLocation();
 		this.beginX = agentLocation[0];
 		this.beginY = agentLocation[1];
-		
-		this.direction = environment.getAgentDirection();
 
 		int[] goldLocation = environment.getGoldLocation();
 		this.endX = goldLocation[0];
@@ -90,8 +86,8 @@ public class AStar {
 		openList.clear();
 		closeList.clear();
 
-		System.out.println("Begins at " + beginX + ", " + beginY);
-		System.out.println("Ends at " + endX + ", " + endY);
+		//System.out.println("Begins at " + beginX + ", " + beginY);
+		//System.out.println("Ends at " + endX + ", " + endY);
 
 		int h = strategy.Heuristic(beginX, beginY, endX, endY);
 		AStarNode initial = new AStarNode(beginX, beginY, 0, h, ' ');
@@ -102,7 +98,7 @@ public class AStar {
 			AStarNode node = openList.poll();
 			closeList.push(node);
 
-			System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
+			//System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
 
 			if (node.x == this.endX && node.y == this.endY) {
 				break; // destination
@@ -122,7 +118,7 @@ public class AStar {
 
 		for (AStarNode node : closeList) {
 			if (node.x == x && node.y == y) {
-				System.out.println("exclusive " + node.x + " " + node.y);
+				//System.out.println("exclusive " + node.x + " " + node.y);
 				return;
 			}
 		}
@@ -132,14 +128,13 @@ public class AStar {
 			int h = strategy.Heuristic(x, y, endX, endY);
 			AStarNode expanded = new AStarNode(x, y, g, h, direction);
 			openList.add(expanded);
-			System.out.println(">> Exanding " + expanded.x + ", " + expanded.y);
+			//System.out.println(">> Exanding " + expanded.x + ", " + expanded.y);
 		}
 		
 	}
 
 	private void postFindPath() {
-		
-		// path
+
 		path.clear();
 		
 		int nextX = endX, nextY = endY;
@@ -150,9 +145,7 @@ public class AStar {
 
 			if (nextX == node.x && nextY == node.y) {
 				Integer[] pos = new Integer[2];
-
-				pos[0] = node.x;
-				pos[1] = node.y;
+				pos[0] = node.x; pos[1] = node.y;
 
 				path.add(pos);
 
@@ -169,9 +162,6 @@ public class AStar {
 				case 'E':
 					nextY--;
 					break;
-				default:
-					System.out.println("end");
-					break;
 				}
 			}
 		}
@@ -180,19 +170,18 @@ public class AStar {
 	}
 	
 	private void postFindStateSeq() {
-		
-		// state seq
-		int agentDir = CharDirToInt(environment.getAgentDirection());
-		int nodeDir = -1;
+
+		int agentDir 	= CharDirToInt(environment.getAgentDirection());
+		int nodeDir 	= -1;
 		
 		StateSeq.clear();
 		StateSeq.add(Action.START_TRIAL);
 		
 		Integer[] before = null;
+		
 		for(Integer[] pos : path){
 			
 			if(before == null){
-			
 				before = new Integer[2];
 				
 				before[0] = pos[0];
@@ -200,48 +189,63 @@ public class AStar {
 				continue;
 			}
 
-			// find nodeDir
-			int dirX = pos[0] - before[0];
-			int dirY = pos[1] - before[1];
-			
-			if( dirX == 1 && dirY == 0 ){
-				nodeDir = NORTH;
-				System.out.println("N");
-			}else if( dirX == -1 && dirY == 0 ){
-				nodeDir = SOUTH;
-				System.out.println("S");
-			}else if( dirX == 0 && dirY == -1){
-				nodeDir = WEST;
-				System.out.println("W");
-			}else if( dirX == 0 && dirY == 1 ){
-				nodeDir = EAST;
-				System.out.println("E");
+			/* find nodeDir */ {
+				
+				int dirX = pos[0] - before[0];
+				int dirY = pos[1] - before[1];
+
+				if (dirX == 1 && dirY == 0) {
+					nodeDir = NORTH;
+					System.out.println("N");
+				} else if (dirX == -1 && dirY == 0) {
+					nodeDir = SOUTH;
+					System.out.println("S");
+				} else if (dirX == 0 && dirY == -1) {
+					nodeDir = WEST;
+					System.out.println("W");
+				} else if (dirX == 0 && dirY == 1) {
+					nodeDir = EAST;
+					System.out.println("E");
+				}
 			}
-			
+
 			int diff = agentDir - nodeDir;
-			
 			System.out.println("agentDir [" + agentDir + "] nodeDir [" + nodeDir + "] diff [" + diff + "]");
-			
-			if(diff == 1 || diff == -3){
-				// left
-				StateSeq.add(Action.TURN_LEFT);
-				System.out.println("turn left");
-			}else if(diff == -1 || diff == 3){
-				// right
-				StateSeq.add(Action.TURN_RIGHT);
-				System.out.println("turn right");
-			}else if(diff == 2){
-				// left * 2
-				StateSeq.add(Action.TURN_LEFT);
-				StateSeq.add(Action.TURN_LEFT);
-				System.out.println("turn left * 2");
+
+			/* Agent Turn */{
+
+				if (diff == 1 || diff == -3) {
+					// left
+					StateSeq.add(Action.TURN_LEFT);
+					System.out.println("turn left");
+					
+				} else if (diff == -1 || diff == 3) {
+					// right
+					StateSeq.add(Action.TURN_RIGHT);
+					System.out.println("turn right");
+					
+				} else if (diff == 2 || diff == -2) {
+					// left * 2
+					StateSeq.add(Action.TURN_LEFT);
+					StateSeq.add(Action.TURN_LEFT);
+					System.out.println("turn left * 2");
+				}
 			}
 			
+			/* Agent Shoot */
+			{
+				Integer[] wumpusLocation = environment.getWumpusLocation();
+				if(pos[0] == wumpusLocation[0] && pos[1] == wumpusLocation[1]){
+					StateSeq.add(Action.SHOOT);
+				}
+			}
 			
+			/* Agent GoFwd */
 			StateSeq.add(Action.GO_FORWARD);
 			
 			// succeeding..
 			agentDir = nodeDir;
+			
 			before[0] = pos[0];
 			before[1] = pos[1];
 		}
@@ -260,16 +264,9 @@ public class AStar {
 	}
 	
 	private int CharDirToInt(char d){
-		switch(d){
-		case 'N':
-			return NORTH;
-		case 'S':
-			return SOUTH;
-		case 'W':
-			return WEST;
-		case 'E':
-			return EAST;
-		}
+		switch(d){ 
+		case 'N': return NORTH; case 'S': return SOUTH; 
+		case 'W': return WEST; case 'E': return EAST; }
 		return -1;
 	}
 

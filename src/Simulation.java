@@ -242,6 +242,7 @@ class Simulation {
 
 				currScore += shootCost;
 
+				environment.shootArrow();
 				environment.placeAgent(agent);
 
 				if (environment.getBump() == true)
