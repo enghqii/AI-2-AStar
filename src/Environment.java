@@ -141,7 +141,8 @@ class Environment {
 		
 		return wumpusPos;
 	}
-		
+	
+	@Deprecated
 	public ArrayList<Integer[]> getPitLocations(){
 		
 		ArrayList<Integer[]> locations = new ArrayList<Integer[]>();

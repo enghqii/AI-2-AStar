@@ -53,7 +53,6 @@ class WorldApplication {
 			for (int currTrial = 0; currTrial < wa.numTrials; currTrial++) {
 
 				char[][][] wumpusWorld = readWumpusWorld(wa.worldSize, wa.gameboard);
-				//char[][][] wumpusWorld = generateRandomWumpusWorld((int) System.currentTimeMillis(), wa.worldSize, true);
 				Environment wumpusEnvironment = new Environment(wa.worldSize, wumpusWorld);
 
 				Simulation trial = new Simulation(wumpusEnvironment,

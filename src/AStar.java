@@ -75,10 +75,10 @@ public class AStar {
 			strategy = new ManhattanStrategy();
 			break;
 		case 4:
-			strategy = new WeightedEuclidStrategy(2.0f);
+			strategy = new WeightedEuclidStrategy(6.00f);
 			break;
 		case 5:
-			strategy = new WeightedManhattanStrategy(2.5f);
+			strategy = new WeightedManhattanStrategy(4.50f);
 			break;
 		default:
 			strategy = null;
@@ -108,7 +108,7 @@ public class AStar {
 			AStarNode node = openList.poll();
 			closeList.push(node);
 
-			System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
+			//System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
 
 			if (node.x == this.endX && node.y == this.endY) {
 				break; // destination
@@ -125,7 +125,7 @@ public class AStar {
 		this.postFindPath();
 		this.postFindStateSeq();
 		
-		System.out.println("loop cnt " + i);
+		//System.out.println("loop cnt " + i);
 		System.out.println("ACTIONS " + this.StateSeq.size());
 	}
 
@@ -133,7 +133,6 @@ public class AStar {
 
 		for (AStarNode node : closeList) {
 			if (node.x == x && node.y == y) {
-				//System.out.println("exclusive " + node.x + " " + node.y);
 				return;
 			}
 		}
@@ -157,6 +156,13 @@ public class AStar {
 			
 			int h = strategy.Heuristic(x, y, endX, endY);
 			AStarNode expanded = new AStarNode(x, y, g, h, direction);
+			
+			for (AStarNode node : openList) {
+				if (node.x == x && node.y == y && node.f < expanded.f) {
+					return;
+				}
+			}
+			
 			openList.add(expanded);
 			//System.out.println(">> Exanding " + expanded.x + ", " + expanded.y);
 		}
