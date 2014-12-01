@@ -33,6 +33,8 @@ class Environment {
 	private boolean bump;
 	private boolean scream;
 	
+	private ArrayList<Integer[]> wumpusPositions;
+	
 	public Environment(int size, char[][][] world) { //, BufferedWriter outWriter) {
 	
 		worldSize = size;
@@ -73,7 +75,34 @@ class Environment {
 		for (int i = 0; i < (worldSize * 5) + worldSize - 1; i++) {
 			bar = bar + "-";
 		}
-				
+			
+		this.gatherWumpusPosition();
+	}
+	
+	private void gatherWumpusPosition(){
+		
+		wumpusPositions = new ArrayList<Integer[]>();
+		Integer[] wumpusPos = new Integer[2];
+		
+		for (int i = 0; i < worldSize; i++) {
+			for (int j = 0; j < worldSize; j++) {
+				if (wumpusWorld[i][j][1] != ' ') {
+					wumpusPos[0] = i;
+					wumpusPos[1] = j;
+					
+					wumpusPositions.add(wumpusPos);
+				}
+			}
+		}
+	}
+	
+	public boolean isWumpusLocation(int x, int y){
+		for(Integer[] pos : wumpusPositions){
+			if(pos[0] == x && pos[1] == y){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public int getWorldSize() {
@@ -125,7 +154,8 @@ class Environment {
 		
 		return goldPos;
 	}
-	
+
+	@Deprecated
 	public Integer[] getWumpusLocation(){
 		
 		Integer[] wumpusPos = new Integer[2];

@@ -108,7 +108,7 @@ public class AStar {
 			AStarNode node = openList.poll();
 			closeList.push(node);
 
-			//System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
+			System.out.println("\nNow Inspecting (" + node.x + "," + node.y+ ") G is [" + node.g + "] H is [" + node.h + "] F = ["+ node.f + "]");
 
 			if (node.x == this.endX && node.y == this.endY) {
 				break; // destination
@@ -149,8 +149,7 @@ public class AStar {
 			} 
 			
 			// wumpus shooting cost
-			Integer[] wumpusLocation = environment.getWumpusLocation();
-			if(x == wumpusLocation[0] && y == wumpusLocation[1]){
+			if(environment.isWumpusLocation(x, y)){
 				g += 2; // shoot cost
 			}
 			
@@ -263,8 +262,8 @@ public class AStar {
 			
 			/* Agent Shoot */
 			{
-				Integer[] wumpusLocation = environment.getWumpusLocation();
-				if(pos[0] == wumpusLocation[0] && pos[1] == wumpusLocation[1]){
+				//Integer[] wumpusLocation = environment.getWumpusLocation();
+				if(environment.isWumpusLocation(pos[0], pos[1])){
 					StateSeq.add(Action.SHOOT);
 				}
 			}
